@@ -40,5 +40,5 @@ services:
     networks:
       - "traefik"
     volumes:
-      - "./letsencrypt:/letsencrypt"
+      - "/etc/letsencrypt:/letsencrypt"
       - "/var/run/docker.sock:/var/run/docker.sock:ro"

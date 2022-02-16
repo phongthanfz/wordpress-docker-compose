@@ -1,5 +1,15 @@
 FROM wordpress:latest
 
 RUN pecl install -o -f redis \
-	&&  rm -rf /tmp/pear \
-	&&  docker-php-ext-enable redis
+	&& rm -rf /tmp/pear \
+	&& docker-php-ext-enable redis \
+	&& docker-php-ext-install pdo pdo_mysql
+
+# Add WP-CLI 
+RUN curl -o /bin/wp-cli.phar https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar
+COPY wp-su.sh /bin/wp
+RUN chmod +x /bin/wp-cli.phar /bin/wp
+
+# Cleanup
+RUN apt-get clean
+RUN rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*

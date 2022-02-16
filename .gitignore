@@ -1,4 +1,4 @@
 .env
 traefik/letsencrypt
 wp-app/
-wp-data
+wp-data/
