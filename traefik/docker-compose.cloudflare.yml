@@ -14,7 +14,6 @@ services:
       options:
         max-size: "10m"
         max-file: "3"
-    restart: unless-stopped
     command:
       # Only for development environment
       - "--api.insecure=true"
@@ -32,8 +31,14 @@ services:
       #- "--certificatesresolvers.myhttpchallenge.acme.caserver=https://acme-staging-v02.api.letsencrypt.org/directory"
       #- "--log.level=DEBUG"
       # Settle letsencrypt as the certificate provider
-      - "--certificatesresolvers.myhttpchallenge.acme.email=${ACME_EMAIL}"
+      - "--certificatesresolvers.myhttpchallenge.acme.email=$ACME_EMAIL"
       - "--certificatesresolvers.myhttpchallenge.acme.storage=/letsencrypt/acme.json"
+      # https://gist.github.com/LeandroBarral/a75bc75954a48412934887a8f5992c15
+      - "--certificatesresolvers.cloudflare.acme.dnschallenge=true"
+      - "--certificatesresolvers.cloudflare.acme.dnschallenge.delaybeforecheck=0"
+      - "--certificatesresolvers.cloudflare.acme.dnschallenge.provider=cloudflare"
+      - "--certificatesresolvers.cloudflare.acme.dnschallenge.resolvers[0]=1.1.1.1:53"
+      - "--certificatesresolvers.cloudflare.acme.dnschallenge.resolvers[1]=8.8.8.8:53"
     ports:
       - "80:80"
       - "443:443"
@@ -42,3 +47,6 @@ services:
     volumes:
       - "/etc/letsencrypt:/letsencrypt"
       - "/var/run/docker.sock:/var/run/docker.sock:ro"
+    environment:
+      - CLOUDFLARE_EMAIL=${CLOUDFLARE_EMAIL}
+      - CLOUDFLARE_API_KEY=${CLOUDFLARE_API_KEY}

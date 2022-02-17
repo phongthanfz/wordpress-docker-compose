@@ -32,14 +32,16 @@ services:
       - "traefik.http.routers.wordpresscp.rule=Host(`${WORDPRESS_SITE}`)"
       - "traefik.http.routers.wordpresscp.entrypoints=web"
       # Redirect these routes to https
-      - "traefik.http.middlewares.redirect-to-https.redirectscheme.scheme=https"
-      - "traefik.http.routers.wordpresscp.middlewares=redirect-to-https@docker"
+      # - "traefik.http.middlewares.redirect-to-https.redirectscheme.scheme=https"
+      # - "traefik.http.routers.wordpresscp.middlewares=redirect-to-https@docker"
       # Get the routes from https
       - "traefik.http.routers.wordpresscp-secured.rule=Host(`${WORDPRESS_SITE}`)"
       - "traefik.http.routers.wordpresscp-secured.entrypoints=web-secure"
       # Apply autentificiation with http challenge
       - "traefik.http.routers.wordpresscp-secured.tls=true"
       - "traefik.http.routers.wordpresscp-secured.tls.certresolver=myhttpchallenge"
+    logging:
+      driver: gcplogs
 
   db:
     image: mysql:latest # https://hub.docker.com/_/mysql/ - or mariadb https://hub.docker.com/_/mariadb
